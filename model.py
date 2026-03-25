@@ -38,6 +38,13 @@ def recommend(song_name, n=5):
     cluster = song.iloc[0]['cluster']
 
     recs = df[df['cluster'] == cluster]
-    recs = recs[recs['track_name'] != song.iloc[0]['track_name']]
+   # recs = recs[recs['track_name'] != song.iloc[0]['track_name']]
+    recs = recs[['track_name','artist_name']].sample(n)
+
+    # Add YouTube link
+    recs['link'] = recs.apply(
+        lambda x: f"https://www.youtube.com/results?search_query={x['track_name']} {x['artist_name']}",
+        axis=1
+    )
 
     return recs[['track_name','artist_name']].sample(n).values.tolist()
